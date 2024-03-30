@@ -8,11 +8,11 @@ assignees: Jharopa
 ---
 
 # User Story
-**As a** 
-**I want** 
-**So that** 
+**As a**
+**I want**
+**So that**
 
-# Acceptance Criteria
-- [x] AC1 - 
-- [x] AC2 - 
+## Acceptance Criteria
+- [x] AC1 -
+- [x] AC2 -
 - [x] AC3 -
