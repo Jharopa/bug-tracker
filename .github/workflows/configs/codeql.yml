@@ -1,4 +1,4 @@
 name: "CodeQL code scanning config"
 
-queries: 
+queries:
   - uses: security-extended
