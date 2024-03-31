@@ -2,7 +2,7 @@
 name: User story template
 about: Template for creating a user story.
 title: 'User Story - '
-labels: ''
+labels: user story
 assignees: Jharopa
 
 ---
