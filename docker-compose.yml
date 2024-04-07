@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: ./bug_tracker
+      dockerfile: Dockerfile
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./bug_tracker:/app/
+    expose:
+      - 8000
+  nginx:
+    image: nginx:alpine
+    ports:
+      - 80:80
+    volumes:
+      - ./configs/nginx/conf.d/:/etc/nginx/conf.d/
+    depends_on:
+      - web
