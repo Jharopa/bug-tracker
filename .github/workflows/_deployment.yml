@@ -24,7 +24,7 @@ jobs:
             cd ~/bug-tracker-fyp/bug_tracker
             docker compose down --rmi local
             cd ~/
-            rm -rf ~/github-actions
+            rm -rf ~/bug-tracker-fyp/
             git clone https://github.com/Jharopa/bug-tracker-fyp.git
             cd ~/bug-tracker-fyp/
             echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> .env
