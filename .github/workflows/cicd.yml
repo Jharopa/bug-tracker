@@ -98,3 +98,12 @@ jobs:
       uses: github/codeql-action/analyze@v3
       with:
         category: "/language:${{matrix.language}}"
+
+  production:
+    name: Deploy to production
+    if: github.event.ref == 'refs/heads/main'
+    needs: [ analyze ]
+    uses: ./.github/workflows/_deployment.yml
+    with:
+      environment: Production
+    secrets: inherit
