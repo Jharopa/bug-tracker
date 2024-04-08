@@ -11,7 +11,7 @@ services:
       && python3 manage.py collectstatic --noinput
       && python manage.py runserver 0.0.0.0:8000"
     volumes:
-      - ./test_site:/app/
+      - ./bug_tracker:/app/
       - static_volume:/var/www/static
       - media_volume:/var/www/media
     expose:
