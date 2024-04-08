@@ -5,9 +5,15 @@ services:
     build:
       context: ./bug_tracker
       dockerfile: Dockerfile
-    command: python manage.py runserver 0.0.0.0:8000
+    command: >
+      sh -c "python3 manage.py makemigrations
+      && python3 manage.py migrate --noinput
+      && python3 manage.py collectstatic --noinput
+      && python manage.py runserver 0.0.0.0:8000"
     volumes:
-      - ./bug_tracker:/app/
+      - ./test_site:/app/
+      - static_volume:/var/www/static
+      - media_volume:/var/www/media
     expose:
       - 8000
     env_file:
@@ -18,5 +24,11 @@ services:
       - 80:80
     volumes:
       - ./configs/nginx/conf.d/:/etc/nginx/conf.d/
+      - static_volume:/var/www/static
+      - media_volume:/var/www/media
     depends_on:
       - web
+
+volumes:
+  static_volume:
+  media_volume:
