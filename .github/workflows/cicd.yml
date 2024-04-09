@@ -99,6 +99,15 @@ jobs:
       with:
         category: "/language:${{matrix.language}}"
 
+  development:
+    name: Deploy to development
+    if: github.event_name == 'pull_request'
+    needs: [ analyze ]
+    uses: ./.github/workflows/_deployment.yml
+    with:
+      environment: Development
+    secrets: inherit
+
   production:
     name: Deploy to production
     if: github.event.ref == 'refs/heads/main'
