@@ -13,6 +13,6 @@ assignees: Jharopa
 **So that**
 
 ## Acceptance Criteria
-- [x] AC1 -
-- [x] AC2 -
-- [x] AC3 -
+- [ ] AC1 -
+- [ ] AC2 -
+- [ ] AC3 -
