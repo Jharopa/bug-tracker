@@ -7,13 +7,17 @@ on:
         type: string
         required: true
         description: Name of target environment to deploy to.
+      branch:
+          type: string
+          required: true
+          description: Name of the branch to be deployed from.
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
     steps:
-      - name: Deploy to ${{ inputs.environment }} via SSH
+      - name: Deploying ${{ inputs.branch }} branch to ${{ inputs.environment }} via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_HOST }}
@@ -25,7 +29,7 @@ jobs:
             docker compose down --rmi local
             cd ~/
             rm -rf ~/bug-tracker-fyp/
-            git clone https://github.com/Jharopa/bug-tracker-fyp.git
+            git clone -b ${{ inputs.branch }} https://github.com/Jharopa/bug-tracker-fyp.git
             cd ~/bug-tracker-fyp/
             echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> .env
             echo "DJANGO_DEBUG=${{ secrets.DJANGO_DEBUG }}" >> .env

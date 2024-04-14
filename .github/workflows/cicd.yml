@@ -101,11 +101,12 @@ jobs:
 
   development:
     name: Deploy to development
-    if: github.event_name == 'pull_request'
+    if: github.event.ref == 'refs/heads/dev'
     needs: [ analyze ]
     uses: ./.github/workflows/_deployment.yml
     with:
       environment: Development
+      branch: dev
     secrets: inherit
 
   production:
@@ -115,4 +116,5 @@ jobs:
     uses: ./.github/workflows/_deployment.yml
     with:
       environment: Production
+      branch: main
     secrets: inherit
