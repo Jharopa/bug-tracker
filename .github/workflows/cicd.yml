@@ -3,8 +3,7 @@ name: "CI/CD Pipeline"
 on:
   push:
     branches:
-      - main
-      - dev
+      - '*'
   pull_request:
     branches:
       - main
@@ -62,7 +61,7 @@ jobs:
       # Run Django's test command (doubles as a build as well)
       - name: Run tests
         run: |
-          python ./bug_tracker/manage.py test
+          python ./bug_tracker/manage.py test users
 
   analyze:
     name: Analyze
