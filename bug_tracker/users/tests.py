@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
+from django.urls import reverse
 
 from .models import CustomUser
 
@@ -96,3 +97,18 @@ class CustomUserTests(TestCase):
         user: CustomUser = self.User.objects.get(pk=1)
 
         self.assertFalse(user.is_manager)
+
+
+class CustomUserLoginViewTests(TestCase):
+    def test_view_url_at_correct_location(self):
+        response = self.client.get("/login/")
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_url_accessible_by_name(self):
+        response = self.client.get(reverse("users:login"))
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        response = self.client.get(reverse("users:login"))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "users/login.html")
