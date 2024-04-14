@@ -62,6 +62,8 @@ jobs:
           pip install -r ./bug_tracker/requirements.txt
       # Run Django's test command (doubles as a build as well)
       - name: Run tests
+        env:
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY_TESTS }}
         run: |
           python ./bug_tracker/manage.py test users
 
