@@ -34,6 +34,11 @@ ALLOWED_HOSTS = [
     "dev.alexander-burns.com",
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://bt.alexander-burns.com",
+    "https://dev.alexander-burns.com",
+]
+
 AUTH_USER_MODEL = "users.CustomUser"
 
 LOGIN_REDIRECT_URL = "/admin"
