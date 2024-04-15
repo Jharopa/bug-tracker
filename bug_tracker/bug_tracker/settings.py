@@ -31,8 +31,17 @@ ALLOWED_HOSTS = [
     "localhost",
     "::1",
     "bt.alexander-burns.com",
-    "dev.bt.alexander-burns.com",
+    "dev.alexander-burns.com",
 ]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://bt.alexander-burns.com",
+    "https://dev.alexander-burns.com",
+]
+
+AUTH_USER_MODEL = "users.CustomUser"
+
+LOGIN_REDIRECT_URL = "/admin"
 
 # Application definition
 
@@ -43,6 +52,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "users",
 ]
 
 MIDDLEWARE = [
@@ -120,6 +130,8 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
+
+STATICFILES_DIRS = [BASE_DIR / "static"]
 
 STATIC_URL = "/static/"
 STATIC_ROOT = "/var/www/static"
