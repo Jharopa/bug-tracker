@@ -31,7 +31,7 @@ ALLOWED_HOSTS = [
     "localhost",
     "::1",
     "bt.alexander-burns.com",
-    "dev.bt.alexander-burns.com",
+    "dev.alexander-burns.com",
 ]
 
 AUTH_USER_MODEL = "users.CustomUser"
