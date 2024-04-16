@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
+from django.urls import reverse
 
 from .models import Bug
 
@@ -122,3 +123,38 @@ class BugModelTest(TestCase):
         bug = Bug.objects.get(pk=1)
 
         self.assertEqual(str(bug), "A Title")
+
+
+class BugListViewTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        User = get_user_model()
+
+        User.objects.create_user(
+            email="normal@test.com", first_name="John", last_name="Doe", password="test"
+        )
+
+    def test_view_logged_in(self):
+        self.client.login(username="normal@test.com", password="test")
+        response = self.client.get("/bugs/")
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_not_logged_in(self):
+        response = self.client.get("/bugs/")
+
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, "/login/?next=/bugs/")
+
+    def test_view_url_accessible_by_name(self):
+        self.client.login(username="normal@test.com", password="test")
+        response = self.client.get(reverse("bugs:bug_list"))
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        self.client.login(username="normal@test.com", password="test")
+        response = self.client.get(reverse("bugs:bug_list"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "bugs/list.html")
