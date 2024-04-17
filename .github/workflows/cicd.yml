@@ -37,6 +37,13 @@ jobs:
           VALIDATE_HTML: false
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Discord Notification
+        uses: sarisia/actions-status-discord@v1
+        if: always()
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          username: GitHub Actions
+
   # Build job: Includes setting up python and running tests
   build:
     name: Build
@@ -66,6 +73,13 @@ jobs:
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY_TESTS }}
         run: |
           python ./bug_tracker/manage.py test users
+
+      - name: Discord Notification
+        uses: sarisia/actions-status-discord@v1
+        if: always()
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          username: GitHub Actions
 
   analyze:
     name: Analyze
@@ -101,6 +115,13 @@ jobs:
       uses: github/codeql-action/analyze@v3
       with:
         category: "/language:${{matrix.language}}"
+
+    - name: Discord Notification
+      uses: sarisia/actions-status-discord@v1
+      if: always()
+      with:
+        webhook: ${{ secrets.DISCORD_WEBHOOK }}
+        username: GitHub Actions
 
   development:
     name: Deploy to development
