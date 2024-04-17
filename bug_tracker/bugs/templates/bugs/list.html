@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+     <div class="mb-3 d-flex justify-content-between">
+        <h1>Bug Reports</h1>
+
+        <div class="d-flex align-items-end">
+            <a class="btn btn-primary d-flex align-items-center" href="#" role="button">Create Bug</a>
+        </div>
+    </div>
+
+    {% if bugs %}
+
+        <table class="table table-striped shadow-lg">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Severity</th>
+                    <th scope="col">Creator</th>
+                    <th scope="col">Created</th>
+                    <th scope="col">Assignee</th>
+                    <th class="text-center" scope="col">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for bug in bugs %}
+                    <tr>
+                        <th scope="row">{{ bug.id }}</th>
+                        <td>{{ bug.title }}</td>
+                        <td>{{ bug.status }}</td>
+                        <td>{{ bug.severity }}</td>
+                        <td>{{ bug.bug_creator }}</td>
+                        <td>{{ bug.bug_created }}</td>
+                        <td>{{ bug.assignee }}</td>
+                        <td class="text-center">
+                            <a class="btn btn-info" href="#">Details</a>
+
+                            <a class="btn btn-primary" href="#">Update</a>
+
+                            <a class="btn btn-danger" href="#">Delete</a>
+
+                            <a class="btn btn-secondary" href="#">Close</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    {% endif %}
+
+{% endblock %}
