@@ -136,15 +136,15 @@ class BugListViewTest(TestCase):
 
     def test_view_logged_in(self):
         self.client.login(username="normal@test.com", password="test")
-        response = self.client.get("/bugs/")
+        response = self.client.get("")
 
         self.assertEqual(response.status_code, 200)
 
     def test_view_not_logged_in(self):
-        response = self.client.get("/bugs/")
+        response = self.client.get("")
 
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, "/login/?next=/bugs/")
+        self.assertRedirects(response, "/login/?next=/")
 
     def test_view_url_accessible_by_name(self):
         self.client.login(username="normal@test.com", password="test")

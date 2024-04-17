@@ -41,7 +41,8 @@ CSRF_TRUSTED_ORIGINS = [
 
 AUTH_USER_MODEL = "users.CustomUser"
 
-LOGIN_REDIRECT_URL = "/admin"
+LOGIN_URL = "/login/"
+LOGIN_REDIRECT_URL = "/"
 
 # Application definition
 
@@ -71,7 +72,7 @@ ROOT_URLCONF = "bug_tracker.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": ["templates", "bug_tracker/templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
