@@ -40,4 +40,5 @@ jobs:
         if: always()
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          title: Deployment to ${{ inputs.environment }}
           username: GitHub Actions

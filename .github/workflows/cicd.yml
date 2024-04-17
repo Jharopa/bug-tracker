@@ -42,6 +42,7 @@ jobs:
         if: always()
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          title: Lint
           username: GitHub Actions
 
   # Build job: Includes setting up python and running tests
@@ -79,6 +80,7 @@ jobs:
         if: always()
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          title: Build
           username: GitHub Actions
 
   analyze:
@@ -121,6 +123,7 @@ jobs:
       if: always()
       with:
         webhook: ${{ secrets.DISCORD_WEBHOOK }}
+        title: Analyze
         username: GitHub Actions
 
   development:
