@@ -21,7 +21,9 @@
                     <th scope="col">Severity</th>
                     <th scope="col">Creator</th>
                     <th scope="col">Created</th>
-                    <th scope="col">Assignee</th>
+                    {% if is_manager %}
+                        <th scope="col">Assignee</th>
+                    {% endif %}
                     <th class="text-center" scope="col">Actions</th>
                 </tr>
             </thead>
@@ -35,13 +37,17 @@
                         <td>{{ bug.severity }}</td>
                         <td>{{ bug.bug_creator }}</td>
                         <td>{{ bug.bug_created }}</td>
-                        <td>{{ bug.assignee }}</td>
+                        {% if is_manager %}
+                            <td>{{ bug.assignee }}</td>
+                        {% endif %}
                         <td class="text-center">
                             <a class="btn btn-info" href="#">Details</a>
 
-                            <a class="btn btn-primary" href="#">Update</a>
+                            {% if is_manager %}
+                                <a class="btn btn-primary" href="#">Update</a>
 
-                            <a class="btn btn-danger" href="#">Delete</a>
+                                <a class="btn btn-danger" href="#">Delete</a>
+                            {% endif %}
 
                             <a class="btn btn-secondary" href="#">Close</a>
                         </td>
