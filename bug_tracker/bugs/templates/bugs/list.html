@@ -6,7 +6,7 @@
         <h1>Bug Reports</h1>
 
         <div class="d-flex align-items-end">
-            <a class="btn btn-primary d-flex align-items-center" href="#" role="button">Create Bug</a>
+            <a class="btn btn-primary d-flex align-items-center" href="{% url 'bugs:bug_create'%}" role="button">Create Bug Report</a>
         </div>
     </div>
 
@@ -21,9 +21,9 @@
                     <th scope="col">Severity</th>
                     <th scope="col">Creator</th>
                     <th scope="col">Created</th>
-                    {% if is_manager %}
-                        <th scope="col">Assignee</th>
-                    {% endif %}
+                        {% if is_manager %}
+                            <th scope="col">Assignee</th>
+                        {% endif %}
                     <th class="text-center" scope="col">Actions</th>
                 </tr>
             </thead>
@@ -37,9 +37,15 @@
                         <td>{{ bug.severity }}</td>
                         <td>{{ bug.bug_creator }}</td>
                         <td>{{ bug.bug_created }}</td>
-                        {% if is_manager %}
-                            <td>{{ bug.assignee }}</td>
-                        {% endif %}
+                            {% if is_manager %}
+                                <td>
+                                    {% if bug.assignee%}
+                                        {{ bug.assignee }}
+                                    {% else %}
+                                        Unassigned
+                                    {% endif %}
+                                </td>
+                            {% endif %}
                         <td class="text-center">
                             <a class="btn btn-info" href="#">Details</a>
 
