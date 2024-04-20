@@ -143,7 +143,6 @@ class BugListViewTest(TestCase):
     def test_view_not_logged_in(self):
         response = self.client.get("")
 
-        self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, "/login/?next=/")
 
     def test_view_url_accessible_by_name(self):
@@ -156,5 +155,4 @@ class BugListViewTest(TestCase):
         self.client.login(username="normal@test.com", password="test")
         response = self.client.get(reverse("bugs:bug_list"))
 
-        self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "bugs/list.html")

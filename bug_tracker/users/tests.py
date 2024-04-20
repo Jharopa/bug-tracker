@@ -99,16 +99,36 @@ class CustomUserTests(TestCase):
         self.assertFalse(user.is_manager)
 
 
-class CustomUserLoginViewTests(TestCase):
+class UserLoginViewTests(TestCase):
     def test_view_url_at_correct_location(self):
         response = self.client.get("/login/")
+
         self.assertEqual(response.status_code, 200)
 
     def test_view_url_accessible_by_name(self):
         response = self.client.get(reverse("users:login"))
+
         self.assertEqual(response.status_code, 200)
 
     def test_view_uses_correct_template(self):
         response = self.client.get(reverse("users:login"))
+
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "users/login.html")
+
+
+class UserLogoutViewTests(TestCase):
+    def test_view_url_at_correct_location(self):
+        response = self.client.get("/logout/")
+
+        self.assertEqual(response.status_code, 302)
+
+    def test_view_url_accessible_by_name(self):
+        response = self.client.get(reverse("users:logout"))
+
+        self.assertEqual(response.status_code, 302)
+
+    def test_view_redirects_to_login(self):
+        response = self.client.get(reverse("users:logout"))
+
+        self.assertRedirects(response, "/login/")
