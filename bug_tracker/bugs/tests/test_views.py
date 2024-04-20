@@ -174,3 +174,67 @@ class BugUpdateViewTest(TestCase):
         response = self.client.get(reverse("bugs:bug_update", args=[1]))
 
         self.assertContains(response, '<h1 class="card-header">Update A Title</h1>')
+
+
+class BugDeleteViewTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        User = get_user_model()
+
+        User.objects.create_user(
+            email="normal@test.com", first_name="John", last_name="Doe", password="test"
+        )
+
+        manager: CustomUser = User.objects.create_user(
+            email="manager@test.com",
+            first_name="Jane",
+            last_name="Doe",
+            password="test",
+        )
+
+        manager.user_type = CustomUser.MANAGER
+        manager.save()
+
+        Bug.objects.create(
+            title="A Title",
+            severity="Minor",
+            status="Open",
+            description="This is a description",
+            bug_creator=manager,
+            assignee=manager,
+        )
+
+    def test_view_logged_in(self):
+        self.client.login(username="manager@test.com", password="test")
+        response = self.client.get("/delete/1/")
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_not_logged_in(self):
+        response = self.client.get("/delete/1/")
+
+        self.assertRedirects(response, "/login/?next=/delete/1/")
+
+    def test_view_url_accessible_by_name(self):
+        self.client.login(username="manager@test.com", password="test")
+        response = self.client.get(reverse("bugs:bug_delete", args=[1]))
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        self.client.login(username="manager@test.com", password="test")
+        response = self.client.get(reverse("bugs:bug_delete", args=[1]))
+
+        self.assertTemplateUsed(response, "bugs/delete.html")
+
+    def test_view_contains_bug_report_title_header(self):
+        self.client.login(username="manager@test.com", password="test")
+        response = self.client.get(reverse("bugs:bug_delete", args=[1]))
+
+        self.assertContains(response, '<h1 class="card-header">Delete A Title</h1>')
+
+    def test_view_redirects_when_accessing_as_developer(self):
+        self.client.login(username="normal@test.com", password="test")
+        response = self.client.get(reverse("bugs:bug_delete", args=[1]))
+
+        self.assertRedirects(response, "/")
