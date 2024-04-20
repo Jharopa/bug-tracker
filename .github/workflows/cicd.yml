@@ -94,7 +94,7 @@ jobs:
         env:
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY_TESTS }}
         run: |
-          python ./bug_tracker/manage.py test users
+          python ./bug_tracker/manage.py test users bugs
 
       - name: Discord Notification
         uses: sarisia/actions-status-discord@v1
