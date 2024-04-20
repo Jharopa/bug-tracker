@@ -1,10 +1,33 @@
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
-from django.views.generic import ListView
+from django.urls import reverse
+from django.views.generic import CreateView, ListView
 from users.models import CustomUser
 
+from .forms import BugFormDeveloper, BugFormManager
 from .models import Bug
+
+
+class BugCreateView(LoginRequiredMixin, CreateView):
+    model = Bug
+    template_name = "bugs/create.html"
+
+    login_url = settings.LOGIN_URL
+
+    def get_form_class(self):
+        if self.request.user.is_manager:
+            return BugFormManager
+        else:
+            return BugFormDeveloper
+
+    def form_valid(self, form):
+        form.instance.bug_creator = self.request.user
+
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("bugs:bug_list")
 
 
 class BugListView(LoginRequiredMixin, ListView):
