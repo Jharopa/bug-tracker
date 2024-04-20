@@ -1,4 +1,4 @@
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user, get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
@@ -118,6 +118,14 @@ class UserLoginViewTests(TestCase):
 
 
 class UserLogoutViewTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        User = get_user_model()
+
+        User.objects.create_user(
+            email="normal@test.com", first_name="John", last_name="Doe", password="test"
+        )
+
     def test_view_url_at_correct_location(self):
         response = self.client.get("/logout/")
 
@@ -132,3 +140,14 @@ class UserLogoutViewTests(TestCase):
         response = self.client.get(reverse("users:logout"))
 
         self.assertRedirects(response, "/login/")
+
+    def test_view_user_is_logged_out(self):
+        self.client.login(username="normal@test.com", password="test")
+        user = get_user(self.client)
+
+        self.assertTrue(user.is_authenticated)
+
+        self.client.get(reverse("users:logout"))
+        user = get_user(self.client)
+
+        self.assertFalse(user.is_authenticated)
