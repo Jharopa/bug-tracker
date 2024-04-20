@@ -47,15 +47,22 @@ LOGIN_REDIRECT_URL = "/"
 # Application definition
 
 INSTALLED_APPS = [
+    # Django apps
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # Third party apps
+    "crispy_forms",
+    "crispy_bootstrap4",
+    # Project apps
     "users",
     "bugs",
 ]
+
+CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
