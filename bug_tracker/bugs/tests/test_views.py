@@ -100,6 +100,88 @@ class BugCreateViewTest(TestCase):
         self.assertNotContains(response, "Assignee")
 
 
+class BugDetailViewTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        User = get_user_model()
+
+        user = User.objects.create_user(
+            email="normal@test.com", first_name="John", last_name="Doe", password="test"
+        )
+
+        manager: CustomUser = User.objects.create_user(
+            email="manager@test.com",
+            first_name="Jane",
+            last_name="Doe",
+            password="test",
+        )
+
+        manager.user_type = CustomUser.MANAGER
+        manager.save()
+
+        Bug.objects.create(
+            title="A Title",
+            severity="Minor",
+            status="Open",
+            description="This is a description",
+            bug_creator=user,
+            assignee=user,
+        )
+
+    def test_view_logged_in(self):
+        self.client.login(username="normal@test.com", password="test")
+        response = self.client.get("/detail/1/")
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_not_logged_in(self):
+        response = self.client.get("/detail/1/")
+
+        self.assertRedirects(response, "/login/?next=/detail/1/")
+
+    def test_view_bug_does_not_exist(self):
+        self.client.login(username="manager@test.com", password="test")
+        response = self.client.get("/detail/2/")
+
+        self.assertEqual(response.status_code, 404)
+
+    def test_view_url_accessible_by_name(self):
+        self.client.login(username="normal@test.com", password="test")
+        response = self.client.get(reverse("bugs:bug_detail", args=[1]))
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        self.client.login(username="normal@test.com", password="test")
+        response = self.client.get(reverse("bugs:bug_detail", args=[1]))
+
+        self.assertTemplateUsed(response, "bugs/detail.html")
+
+    def test_view_form_manager(self):
+        self.client.login(username="manager@test.com", password="test")
+        response = self.client.get(reverse("bugs:bug_detail", args=[1]))
+
+        self.assertContains(response, "Assignee")
+
+    def test_view_form_contains_assignee_when_manager(self):
+        self.client.login(username="manager@test.com", password="test")
+        response = self.client.get(reverse("bugs:bug_detail", args=[1]))
+
+        self.assertContains(response, "Assignee")
+
+    def test_view_form_does_not_contain_assignee_when_developer(self):
+        self.client.login(username="normal@test.com", password="test")
+        response = self.client.get(reverse("bugs:bug_detail", args=[1]))
+
+        self.assertNotContains(response, "Assignee")
+
+    def test_view_contains_bug_report_title_header(self):
+        self.client.login(username="normal@test.com", password="test")
+        response = self.client.get(reverse("bugs:bug_detail", args=[1]))
+
+        self.assertContains(response, '<h1 class="card-header">A Title Details</h1>')
+
+
 class BugUpdateViewTest(TestCase):
     @classmethod
     def setUpTestData(cls):
