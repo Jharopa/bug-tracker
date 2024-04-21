@@ -50,9 +50,9 @@
                             <a class="btn btn-info" href="#">Details</a>
 
                             {% if is_manager %}
-                                <a class="btn btn-primary" href="#">Update</a>
+                                <a class="btn btn-primary" href="{% url 'bugs:bug_update' bug.id %}">Update</a>
 
-                                <a class="btn btn-danger" href="#">Delete</a>
+                                <a class="btn btn-danger" href="{% url 'bugs:bug_delete' bug.id %}">Delete</a>
                             {% endif %}
 
                             <a class="btn btn-secondary" href="#">Close</a>
