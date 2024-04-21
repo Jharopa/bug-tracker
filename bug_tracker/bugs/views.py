@@ -3,7 +3,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
-from django.views.generic import CreateView, DeleteView, ListView, UpdateView
+from django.views.generic import (
+    CreateView,
+    DeleteView,
+    DetailView,
+    ListView,
+    UpdateView,
+)
 from users.models import CustomUser
 
 from .forms import BugFormDeveloper, BugFormManager
@@ -29,6 +35,26 @@ class BugCreateView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         return reverse("bugs:bug_list")
+
+
+class BugDetailView(LoginRequiredMixin, DetailView):
+    model = Bug
+    template_name = "bugs/detail.html"
+    context_object_name = "bug"
+
+    login_url = settings.LOGIN_URL
+
+    def get_object(self):
+        id = self.kwargs.get("id")
+        return get_object_or_404(Bug, id=id)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        if self.request.user.is_manager:
+            context["is_manager"] = True
+
+        return context
 
 
 class BugListView(LoginRequiredMixin, ListView):
