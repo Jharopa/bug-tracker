@@ -47,7 +47,7 @@
                                 </td>
                             {% endif %}
                         <td class="text-center">
-                            <a class="btn btn-info" href="#">Details</a>
+                            <a class="btn btn-info" href="{% url 'bugs:bug_detail' bug.id %}">Details</a>
 
                             {% if is_manager %}
                                 <a class="btn btn-primary" href="{% url 'bugs:bug_update' bug.id %}">Update</a>
