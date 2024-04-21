@@ -139,6 +139,12 @@ class BugUpdateViewTest(TestCase):
 
         self.assertRedirects(response, "/login/?next=/update/1/")
 
+    def test_view_bug_does_not_exist(self):
+        self.client.login(username="manager@test.com", password="test")
+        response = self.client.get("/update/2/")
+
+        self.assertEqual(response.status_code, 404)
+
     def test_view_url_accessible_by_name(self):
         self.client.login(username="normal@test.com", password="test")
         response = self.client.get(reverse("bugs:bug_update", args=[1]))
@@ -214,6 +220,12 @@ class BugDeleteViewTest(TestCase):
         response = self.client.get("/delete/1/")
 
         self.assertRedirects(response, "/login/?next=/delete/1/")
+
+    def test_view_bug_does_not_exist(self):
+        self.client.login(username="manager@test.com", password="test")
+        response = self.client.get("/delete/2/")
+
+        self.assertEqual(response.status_code, 404)
 
     def test_view_url_accessible_by_name(self):
         self.client.login(username="manager@test.com", password="test")
