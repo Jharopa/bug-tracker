@@ -1,7 +1,9 @@
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
-from django.shortcuts import get_object_or_404, redirect
+from django.http import HttpRequest
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.views.generic import (
     CreateView,
@@ -123,3 +125,21 @@ class BugDeleteView(LoginRequiredMixin, DeleteView):
 
     def get_success_url(self):
         return reverse("bugs:bug_list")
+
+
+@login_required(login_url=settings.LOGIN_URL)
+def close_bug_view(request: HttpRequest, id):
+    bug = get_object_or_404(Bug, id=id)
+
+    if request.user != bug.assignee:
+        return redirect("bugs:bug_list")
+
+    if request.method == "GET":
+        return render(request, "bugs/close.html", {"bug": bug})
+
+    if request.method == "POST":
+        if bug.status == "Open":
+            bug.status = "Closed"
+            bug.save()
+
+        return redirect("bugs:bug_list")

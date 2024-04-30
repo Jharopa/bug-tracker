@@ -332,3 +332,92 @@ class BugDeleteViewTest(TestCase):
         response = self.client.get(reverse("bugs:bug_delete", args=[1]))
 
         self.assertRedirects(response, "/")
+
+    def test_view_post_request_deletes_bug_report(self):
+        self.client.login(username="manager@test.com", password="test")
+
+        bug = Bug.objects.get(id=1)
+        self.assertIsNotNone(bug)
+
+        self.client.post(reverse("bugs:bug_delete", args=[1]))
+
+        with self.assertRaises(Bug.DoesNotExist):
+            bug = Bug.objects.get(id=1)
+
+
+class BugCloseViewTest(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        User = get_user_model()
+
+        user = User.objects.create_user(
+            email="normal@test.com", first_name="John", last_name="Doe", password="test"
+        )
+
+        User.objects.create_user(
+            email="unassigned@test.com",
+            first_name="Jane",
+            last_name="Doe",
+            password="test",
+        )
+
+        Bug.objects.create(
+            title="A Title",
+            severity="Minor",
+            status="Open",
+            description="This is a description",
+            bug_creator=user,
+            assignee=user,
+        )
+
+    def test_view_logged_in(self):
+        self.client.login(username="normal@test.com", password="test")
+        response = self.client.get("/close/1/")
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_not_logged_in(self):
+        response = self.client.get("/close/1/")
+
+        self.assertRedirects(response, "/login/?next=/close/1/")
+
+    def test_view_bug_does_not_exist(self):
+        self.client.login(username="normal@test.com", password="test")
+        response = self.client.get("/close/2/")
+
+        self.assertEqual(response.status_code, 404)
+
+    def test_view_url_accessible_by_name(self):
+        self.client.login(username="normal@test.com", password="test")
+        response = self.client.get(reverse("bugs:bug_close", args=[1]))
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_view_uses_correct_template(self):
+        self.client.login(username="normal@test.com", password="test")
+        response = self.client.get(reverse("bugs:bug_close", args=[1]))
+
+        self.assertTemplateUsed(response, "bugs/close.html")
+
+    def test_view_contains_bug_report_title_header(self):
+        self.client.login(username="normal@test.com", password="test")
+        response = self.client.get(reverse("bugs:bug_close", args=[1]))
+
+        self.assertContains(response, '<h1 class="card-header">Close A Title</h1>')
+
+    def test_view_post_request_closes_bug_report(self):
+        self.client.login(username="normal@test.com", password="test")
+
+        bug = Bug.objects.get(id=1)
+        self.assertEqual(bug.status, "Open")
+
+        self.client.post(reverse("bugs:bug_close", args=[1]))
+
+        bug = Bug.objects.get(id=1)
+        self.assertEqual(bug.status, "Closed")
+
+    def test_view_unassigned_user_redirected(self):
+        self.client.login(username="unassigned@test.com", password="test")
+        response = self.client.get(reverse("bugs:bug_close", args=[1]))
+
+        self.assertRedirects(response, "/")
