@@ -7,7 +7,6 @@ from lookup_property import lookup_property
 from .managers import CustomUserManager
 
 
-# type: ignore
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     MANAGER = "M"
     DEVELOPER = "D"
@@ -34,7 +33,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         return "{} {}".format(self.first_name, self.last_name)
 
     @lookup_property
-    def full_name():
+    def full_name():  # type: ignore
         return Concat("first_name", Value(" "), "last_name")
 
     @property
