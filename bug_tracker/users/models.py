@@ -1,9 +1,13 @@
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
+from django.db.models import Value
+from django.db.models.functions import Concat
+from lookup_property import lookup_property
 
 from .managers import CustomUserManager
 
 
+# type: ignore
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     MANAGER = "M"
     DEVELOPER = "D"
@@ -29,8 +33,9 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return "{} {}".format(self.first_name, self.last_name)
 
-    def get_first_name(self):
-        return self.first_name
+    @lookup_property
+    def full_name():
+        return Concat("first_name", Value(" "), "last_name")
 
     @property
     def is_manager(self):

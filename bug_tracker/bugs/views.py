@@ -12,6 +12,7 @@ from django.views.generic import (
     ListView,
     UpdateView,
 )
+from lookup_property import L
 from users.models import CustomUser
 
 from .forms import BugFormDeveloper, BugFormManager
@@ -69,12 +70,18 @@ class BugListView(LoginRequiredMixin, ListView):
     login_url = settings.LOGIN_URL
 
     def get_queryset(self):
+        order_by = self.request.GET.get("order_by", "id")
+        status = self.request.GET.get("status", "")
+        assignee = self.request.GET.get("assignee", "")
+
+        query = Q(status__contains=status) & L(assignee__full_name__contains=assignee)
+
         if self.request.user.user_type == CustomUser.MANAGER:
-            return self.model.objects.all().order_by("id")
+            return self.model.objects.all().filter(query).order_by(order_by)
         elif self.request.user.user_type == CustomUser.DEVELOPER:
             return self.model.objects.filter(
-                Q(assignee__id=self.request.user.id)
-            ).order_by("id")
+                Q(assignee__id=self.request.user.id) & query
+            ).order_by(order_by)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
