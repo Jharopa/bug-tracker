@@ -5,6 +5,24 @@
      <div class="mb-3 d-flex justify-content-between">
         <h1>Bug Reports</h1>
 
+        <form method="get" class="form-inline">
+            <div class="form-group">
+                <select name="status" class="form-control">
+                    <option value="">All</option>
+                    <option value="Open">Open</option>
+                    <option value="Closed">Closed</option>
+                </select>
+                <input type="submit" value="Filter" class="btn btn-primary">
+            </div>
+        </form>
+
+        <form method="get" class="form-inline">
+            <div class="form-group mx-sm-3">
+                <input type="text" name="assignee" class="form-control">
+                <input type="submit" value="Search" class="btn btn-primary">
+            </div>
+        </form>
+
         <a class="btn my-sm-3 btn-primary d-flex align-items-center" href="{% url 'bugs:bug_create'%}" role="button">Create Bug Report</a>
     </div>
 
