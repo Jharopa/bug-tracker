@@ -5,9 +5,7 @@
      <div class="mb-3 d-flex justify-content-between">
         <h1>Bug Reports</h1>
 
-        <div class="d-flex align-items-end">
-            <a class="btn btn-primary d-flex align-items-center" href="{% url 'bugs:bug_create'%}" role="button">Create Bug Report</a>
-        </div>
+        <a class="btn my-sm-3 btn-primary d-flex align-items-center" href="{% url 'bugs:bug_create'%}" role="button">Create Bug Report</a>
     </div>
 
     {% if bugs %}
@@ -15,12 +13,12 @@
         <table class="table table-striped shadow-lg">
             <thead class="thead-dark">
                 <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Title</th>
+                    <th scope="col"><a href="?order_by=id" class="text-white">ID</a></th>
+                    <th scope="col"><a href="?order_by=title" class="text-white">Title</a></th>
                     <th scope="col">Status</th>
-                    <th scope="col">Severity</th>
+                    <th scope="col"><a href="?order_by=severity" class="text-white">Severity</a></th>
                     <th scope="col">Creator</th>
-                    <th scope="col">Created</th>
+                    <th scope="col"><a href="?order_by=bug_created" class="text-white"s>Created</a></th>
                         {% if is_manager %}
                             <th scope="col">Assignee</th>
                         {% endif %}
@@ -54,8 +52,9 @@
 
                                 <a class="btn btn-danger" href="{% url 'bugs:bug_delete' bug.id %}">Delete</a>
                             {% endif %}
-
-                            <a class="btn btn-secondary" href="#">Close</a>
+                            {% if bug.status == "Open" %}
+                                <a class="btn btn-secondary" href="{% url 'bugs:bug_close' bug.id %}">Close</a>
+                            {% endif %}
                         </td>
                     </tr>
                 {% endfor %}
