@@ -1,1 +1,4 @@
+crispy-bootstrap4==2024.1
 Django==4.2.11
+django-crispy-forms==2.1
+django-lookup-property==0.1.4

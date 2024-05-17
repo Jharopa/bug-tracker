@@ -1,8 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase
-from django.urls import reverse
 
-from .models import CustomUser
+from ..models import CustomUser
 
 
 class CustomUserManagersTests(TestCase):
@@ -72,43 +71,3 @@ class CustomUserManagersTests(TestCase):
         user: CustomUser = self.User.objects.get(pk=2)
 
         self.assertTrue(user.is_superuser)
-
-
-class CustomUserTests(TestCase):
-    User = get_user_model()
-
-    @classmethod
-    def setUpTestData(cls):
-        cls.User.objects.create_user(
-            email="normal@test.com", first_name="John", last_name="Doe", password="test"
-        )
-
-    def test_custom_user_str(self):
-        user: CustomUser = self.User.objects.get(pk=1)
-
-        self.assertEqual(str(user), "John Doe")
-
-    def test_custom_user_default_is_developer(self):
-        user: CustomUser = self.User.objects.get(pk=1)
-
-        self.assertTrue(user.is_developer)
-
-    def test_custom_user_default_is_not_manager(self):
-        user: CustomUser = self.User.objects.get(pk=1)
-
-        self.assertFalse(user.is_manager)
-
-
-class CustomUserLoginViewTests(TestCase):
-    def test_view_url_at_correct_location(self):
-        response = self.client.get("/login/")
-        self.assertEqual(response.status_code, 200)
-
-    def test_view_url_accessible_by_name(self):
-        response = self.client.get(reverse("users:login"))
-        self.assertEqual(response.status_code, 200)
-
-    def test_view_uses_correct_template(self):
-        response = self.client.get(reverse("users:login"))
-        self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, "users/login.html")

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="card shadow-lg">
+        <h1 class="card-header">{{ bug.title }} Details</h1>
+        <div class="card-body">
+            <h5 class="card-title">ID - {{ bug.id }}</h5>
+            <h5 class="card-title">Status - {{ bug.status }}</h5>
+            <h5 class="card-title">Severity - {{ bug.severity }}</h5>
+            <h5 class="card-title">Creator - {{ bug.bug_creator }}</h5>
+            <h5 class="card-title">Created - {{ bug.bug_created }}</h5>
+
+            {% if is_manager %}
+                <h5 class="card-title">Assignee - {{ bug.assignee }}</h5>
+            {% endif %}
+
+            <h5 class="card-title">Description</h5>
+            <p>{{ bug.description }}</p>
+
+            <a class="btn btn-primary mt-1" href="{% url 'bugs:bug_list' %}">Return</a>
+        </div>
+    </div>
+
+{% endblock %}

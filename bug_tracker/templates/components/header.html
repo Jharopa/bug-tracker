@@ -1,0 +1,18 @@
+{% load static %}
+
+<header class="shadow mb-4">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+        <a class="navbar-brand" href="#">
+            <img class="d-inline-block align-top" src="{% static 'bug_tracker/bug.png' %}" alt="Logo" width="32", height="32">
+            Bugtracker
+        </a>
+
+        <span class="mr-3">Welcome, {{ user }}</span>
+
+        <ul class="navbar-nav ml-auto">
+            <li>
+                <a class="btn btn-outline-primary" href="{% url 'users:logout' %}" role="button">Logout</a>
+            </li>
+        </ul>
+    </nav>
+</header>

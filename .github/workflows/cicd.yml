@@ -37,10 +37,39 @@ jobs:
           VALIDATE_HTML: false
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  # Build job: Includes setting up python and running tests
+      - name: Discord Notification
+        uses: sarisia/actions-status-discord@v1
+        if: always()
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          title: Lint
+          username: GitHub Actions
+
   build:
     name: Build
     needs: [ lint ]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Build
+        run: |
+          echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY_BUILD }}" >> ${{ github.workspace }}/.env
+          echo "DJANGO_DEBUG=False" >> ${{ github.workspace }}/.env
+          docker-compose up -d --build
+
+      - name: Discord Notification
+        uses: sarisia/actions-status-discord@v1
+        if: always()
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          title: Build
+          username: GitHub Actions
+
+  test:
+    name: Test
+    needs: [ build ]
     runs-on: ubuntu-latest
     strategy:
         matrix:
@@ -60,16 +89,24 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r ./bug_tracker/requirements.txt
-      # Run Django's test command (doubles as a build as well)
+      # Run Django's test
       - name: Run tests
         env:
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY_TESTS }}
         run: |
-          python ./bug_tracker/manage.py test users
+          python ./bug_tracker/manage.py test users bugs
+
+      - name: Discord Notification
+        uses: sarisia/actions-status-discord@v1
+        if: always()
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          title: Test
+          username: GitHub Actions
 
   analyze:
     name: Analyze
-    needs: [ build ]
+    needs: [ test ]
     runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
     timeout-minutes: ${{ (matrix.language == 'swift' && 120) || 360 }}
     permissions:
@@ -101,6 +138,14 @@ jobs:
       uses: github/codeql-action/analyze@v3
       with:
         category: "/language:${{matrix.language}}"
+
+    - name: Discord Notification
+      uses: sarisia/actions-status-discord@v1
+      if: always()
+      with:
+        webhook: ${{ secrets.DISCORD_WEBHOOK }}
+        title: Analyze
+        username: GitHub Actions
 
   development:
     name: Deploy to development

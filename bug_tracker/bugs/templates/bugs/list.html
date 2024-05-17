@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+     <div class="mb-3 d-flex justify-content-between">
+        <h1>Bug Reports</h1>
+
+        <form method="get" class="form-inline">
+            <div class="form-group">
+                <select name="status" class="form-control">
+                    <option value="">All</option>
+                    <option value="Open">Open</option>
+                    <option value="Closed">Closed</option>
+                </select>
+                <input type="submit" value="Filter" class="btn btn-primary">
+            </div>
+        </form>
+
+        {% if is_manager %}
+            <form method="get" class="form-inline">
+                <div class="form-group mx-sm-3">
+                    <input type="text" name="assignee" class="form-control">
+                    <input type="submit" value="Search" class="btn btn-primary">
+                </div>
+            </form>
+        {% endif %}
+
+        <a class="btn my-sm-3 btn-primary d-flex align-items-center" href="{% url 'bugs:bug_create'%}" role="button">Create Bug Report</a>
+    </div>
+
+    {% if bugs %}
+
+        <table class="table table-striped shadow-lg">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col"><a href="?order_by=id" class="text-white">ID</a></th>
+                    <th scope="col"><a href="?order_by=title" class="text-white">Title</a></th>
+                    <th scope="col">Status</th>
+                    <th scope="col"><a href="?order_by=severity" class="text-white">Severity</a></th>
+                    <th scope="col">Creator</th>
+                    <th scope="col"><a href="?order_by=bug_created" class="text-white"s>Created</a></th>
+                        {% if is_manager %}
+                            <th scope="col">Assignee</th>
+                        {% endif %}
+                    <th class="text-center" scope="col">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for bug in bugs %}
+                    <tr>
+                        <th scope="row">{{ bug.id }}</th>
+                        <td>{{ bug.title }}</td>
+                        <td>{{ bug.status }}</td>
+                        <td>{{ bug.severity }}</td>
+                        <td>{{ bug.bug_creator }}</td>
+                        <td>{{ bug.bug_created }}</td>
+                            {% if is_manager %}
+                                <td>
+                                    {% if bug.assignee%}
+                                        {{ bug.assignee }}
+                                    {% else %}
+                                        Unassigned
+                                    {% endif %}
+                                </td>
+                            {% endif %}
+                        <td class="text-center">
+                            <a class="btn btn-info" href="{% url 'bugs:bug_detail' bug.id %}">Details</a>
+
+                            {% if is_manager %}
+                                <a class="btn btn-primary" href="{% url 'bugs:bug_update' bug.id %}">Update</a>
+
+                                <a class="btn btn-danger" href="{% url 'bugs:bug_delete' bug.id %}">Delete</a>
+                            {% endif %}
+                            {% if bug.status == "Open" %}
+                                <a class="btn btn-secondary" href="{% url 'bugs:bug_close' bug.id %}">Close</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    {% endif %}
+
+{% endblock %}
