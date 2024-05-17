@@ -15,6 +15,16 @@ class BugListViewTest(TestCase):
             email="normal@test.com", first_name="John", last_name="Doe", password="test"
         )
 
+        manager: CustomUser = User.objects.create_user(
+            email="manager@test.com",
+            first_name="Jane",
+            last_name="Doe",
+            password="test",
+        )
+
+        manager.user_type = CustomUser.MANAGER
+        manager.save()
+
     def test_view_logged_in(self):
         self.client.login(username="normal@test.com", password="test")
         response = self.client.get("")
@@ -37,6 +47,22 @@ class BugListViewTest(TestCase):
         response = self.client.get(reverse("bugs:bug_list"))
 
         self.assertTemplateUsed(response, "bugs/list.html")
+
+    def test_view_contains_search_as_manager(self):
+        self.client.login(username="manager@test.com", password="test")
+        response = self.client.get(reverse("bugs:bug_list"))
+
+        self.assertContains(
+            response, '<input type="text" name="assignee" class="form-control">'
+        )
+
+    def test_view_doesnt_contain_search_as_developer(self):
+        self.client.login(username="normal@test.com", password="test")
+        response = self.client.get(reverse("bugs:bug_list"))
+
+        self.assertNotContains(
+            response, '<input type="text" name="assignee" class="form-control">'
+        )
 
 
 class BugCreateViewTest(TestCase):

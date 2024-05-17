@@ -138,7 +138,7 @@ class BugDeleteView(LoginRequiredMixin, DeleteView):
 def close_bug_view(request: HttpRequest, id):
     bug = get_object_or_404(Bug, id=id)
 
-    if request.user != bug.assignee:
+    if request.user != bug.assignee and not request.user.is_manager:
         return redirect("bugs:bug_list")
 
     if request.method == "GET":

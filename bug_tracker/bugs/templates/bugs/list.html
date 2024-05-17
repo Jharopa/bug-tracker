@@ -16,12 +16,14 @@
             </div>
         </form>
 
-        <form method="get" class="form-inline">
-            <div class="form-group mx-sm-3">
-                <input type="text" name="assignee" class="form-control">
-                <input type="submit" value="Search" class="btn btn-primary">
-            </div>
-        </form>
+        {% if is_manager %}
+            <form method="get" class="form-inline">
+                <div class="form-group mx-sm-3">
+                    <input type="text" name="assignee" class="form-control">
+                    <input type="submit" value="Search" class="btn btn-primary">
+                </div>
+            </form>
+        {% endif %}
 
         <a class="btn my-sm-3 btn-primary d-flex align-items-center" href="{% url 'bugs:bug_create'%}" role="button">Create Bug Report</a>
     </div>
