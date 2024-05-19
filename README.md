@@ -14,7 +14,7 @@ The perfered method to run the application is to use Docker which requires Both 
 * Update the contents of the copied `.env` file setting `DJANGO_DEBUG=` to true and `DJANGO_SECRET_KEY=` to a secret key of your choice.
 * From the same directory run the following docker compose command `docker compose up -d --build` (Please ensure that no application docker or otherwise is bound to localhost port 80 before running this).
 * To create a superuser for the application which will allow you to login to both the application and the Django admin area to create further users run the commnand `docker exec -it bug-tracker-web-1 python manage.py createsuperuser` and follow the prompts on screen.
-* Navigate to http://localhost within a brower and use the credentails created previously to login. You can also access the Django admin from http://localhost/admin and login there for access to the Django admin area.
+* Navigate to [this URL](http://localhost) within a browser and use the credentails created previously to login. You can also access the Django admin from [this URL](http://localhost/admin) and login there for access to the Django admin area.
 
 ### Dockerless
 The application can also be ran on a machine without the use of Docker, however this does require the machine to have python 3.11 or later installed.
@@ -26,4 +26,4 @@ The application can also be ran on a machine without the use of Docker, however 
 * Install the projects requirements by then running `pip install -r bug_tracker\requirements.txt`
 * To create a superuser for the application which will allow you to login to both the application and the Django admin area to create further users run the commnand `python bug_tracker\manage.py createsuperuser` and follow the prompts on screen.
 * To then start up the application run the command `python bug_tracker\manage.py runserver`.
-* Navigate to http://localhost within a brower and use the credentails created previously to login. You can also access the Django admin from http://localhost/admin and login there for access to the Django admin area.
+* Navigate to [this URL](http://localhost) within a browser and use the credentails created previously to login. You can also access the Django admin from [this URL](http://localhost/admin) and login there for access to the Django admin area.
